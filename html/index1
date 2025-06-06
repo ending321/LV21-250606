@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>登录</title>
+	</head>
+	<body>
+	    <h1>登录</h1>
+	    <form action="/cgi-bin/login" method="GET">
+		Username:<INPUT type="TExT" name="username"><br>
+		Password:<INPUT type="PASSWORD" name="password"><br>
+		<INPUT type="SUBMIT" value="Login">
+	    </form>
+	</body>
+</html>
