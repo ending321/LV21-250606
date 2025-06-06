@@ -1,0 +1,4 @@
+
+gcc login.c  -o login -Wall
+
+cp login /usr/lib/cgi-bin/
