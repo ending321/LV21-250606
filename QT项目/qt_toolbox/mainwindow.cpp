@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     setCentralWidget(centralWidget); //设置为中心部件
-
+/*
     //功能按钮 - 数据库配置(示例：点击弹出对话框
     QPushButton *btnDbConfig = new QPushButton("数据库配置", centralWidget);
     connect(btnDbConfig, &QPushButton::clicked, this, [=](){
@@ -26,7 +27,74 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
     layout->addWidget(btnDbConfig);
+*/
+    //----------------------数据库操作控件----------------------
+    //数据库配置按钮
+    QPushButton *btnDbConfig = new QPushButton("数据库配置", this);
+    connect(btnDbConfig, &QPushButton::clicked, this, [=](){
+        dialog_config dialog(this);
+        if(dialog.exec()==QDialog::Accepted){
+            QString dbPath = dialog.getDbPath();
+            //初始化数据库
+            if(DatabaseHelper::instance().initDatabase(dbPath)){
+                QMessageBox::information(this, "配置成功", "数据库路径已设为:"+dbPath);
+            }else{
+                QSqlError error=DatabaseHelper::instance().lastError();
+                QMessageBox::critical(this, "配置失败","数据库初始化失败"+error.text());
+            }
+        }
+    });
+    layout->addWidget(btnDbConfig);
 
+    //用户信息输入控件
+    QLabel *lbUserName = new QLabel("用户名:", centralWidget);
+    leUserName = new QLineEdit(centralWidget);
+    leUserName->setPlaceholderText("请输入用户名");
+
+    QLabel *lbUserAge = new QLabel("年龄", centralWidget);
+    leUserAge = new QLineEdit(centralWidget);
+    leUserAge->setPlaceholderText("请输入年龄");
+
+    QLabel *lbUserEmail = new QLabel("邮箱", centralWidget);
+    leUserEmail = new QLineEdit(centralWidget);
+    leUserEmail->setPlaceholderText("请输入邮箱");
+
+    //添加用户按钮
+    btnAddUser = new QPushButton("添加用户", this);
+    connect(btnAddUser, &QPushButton::clicked, this, [=](){
+        QString name = leUserName->text().trimmed();
+        if(name.isEmpty()){
+            QMessageBox::warning(this,"输入错误","用户名不能为空");
+            return;
+        }
+
+        bool ok;
+        int age = leUserAge->text().toInt(&ok);
+        if(!ok||age<0){
+            QMessageBox::warning(this,"输入错误","请输入有效的年龄");
+            return;
+        }
+
+        QString email = leUserEmail->text().trimmed();
+        if(email.isEmpty()){
+            QMessageBox::warning(this,"输入错误","邮箱不能为空");
+            return;
+        }
+
+        //调用DatabaseHelper添加用户
+        if(DatabaseHelper::instance().addUser(name,age,email)){
+            QMessageBox::information(this,"成功","用户添加成功");
+            //清空输入框
+            leUserName->clear();
+            leUserAge->clear();
+            leUserEmail->clear();
+        }else{
+            QSqlError error=DatabaseHelper::instance().lastError();
+            QMessageBox::critical(this,"失败","添加用户失败:"+error.text());
+        }
+    });
+
+    //-------------------------------------------------------
     // 功能按钮 - 多线程测试（模拟耗时操作）
     QPushButton *btnThreadTest = new QPushButton("多线程测试", this);
     connect(btnThreadTest, &QPushButton::clicked, this, [=](){

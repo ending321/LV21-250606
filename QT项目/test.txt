@@ -1,0 +1,60 @@
+    // 订单信息输入控件
+    QLabel *lblOrderProduct = new QLabel("商品名称:", centralWidget);
+    leOrderProduct = new QLineEdit(centralWidget);
+    leOrderProduct->setPlaceholderText("请输入商品名称");
+    
+    QLabel *lblOrderAmount = new QLabel("订单金额:", centralWidget);
+    leOrderAmount = new QLineEdit(centralWidget);
+    leOrderAmount->setPlaceholderText("请输入订单金额");
+    
+    QLabel *lblUserId = new QLabel("用户ID:", centralWidget);
+    leUserId = new QLineEdit(centralWidget);
+    leUserId->setPlaceholderText("请输入用户ID");
+    
+    // 添加订单按钮
+    btnAddOrder = new QPushButton("添加订单", centralWidget);
+    connect(btnAddOrder, &QPushButton::clicked, this, [=](){
+        bool ok;
+        int userId = leUserId->text().toInt(&ok);
+        if (!ok || userId <= 0) {
+            QMessageBox::warning(this, "输入错误", "请输入有效的用户ID");
+            return;
+        }
+        
+        QString product = leOrderProduct->text().trimmed();
+        if (product.isEmpty()) {
+            QMessageBox::warning(this, "输入错误", "商品名称不能为空");
+            return;
+        }
+        
+        double amount = leOrderAmount->text().toDouble(&ok);
+        if (!ok || amount <= 0) {
+            QMessageBox::warning(this, "输入错误", "请输入有效的订单金额");
+            return;
+        }
+        
+        // 调用 DatabaseHelper 添加订单
+        if (DatabaseHelper::instance().addOrder(userId, product, amount)) {
+            QMessageBox::information(this, "成功", "订单添加成功");
+            // 清空输入框
+            leUserId->clear();
+            leOrderProduct->clear();
+            leOrderAmount->clear();
+        } else {
+            QSqlError error = DatabaseHelper::instance().lastError();
+            QMessageBox::critical(this, "失败", "添加订单失败：" + error.text());
+        }
+    });
+    
+    // 将数据库操作控件添加到布局（使用表单布局使界面更整齐）
+    QFormLayout *formLayout = new QFormLayout();
+    formLayout->addRow(lblUserName, leUserName);
+    formLayout->addRow(lblUserAge, leUserAge);
+    formLayout->addRow(lblUserEmail, leUserEmail);
+    formLayout->addRow(btnAddUser);
+    formLayout->addRow(lblUserId, leUserId);
+    formLayout->addRow(lblOrderProduct, leOrderProduct);
+    formLayout->addRow(lblOrderAmount, leOrderAmount);
+    formLayout->addRow(btnAddOrder);
+    
+    layout->addLayout(formLayout);

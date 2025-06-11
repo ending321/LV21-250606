@@ -98,5 +98,3 @@ QSqlError DatabaseHelper::lastError() const
 {
     return m_lastError;
 }
-
-
