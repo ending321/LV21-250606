@@ -12,6 +12,9 @@
 #include <QProgressBar>
 #include <QTextEdit>
 #include <QLineEdit>
+#include <QComboBox>
+#include <QTableView>
+#include <QSqlQueryModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,8 +41,17 @@ private:
     QLineEdit *leUserEmail;
     QLineEdit *leOrderProduct;
     QLineEdit *leOrderAmount;
+    QLineEdit *leUserId;
     QPushButton *btnAddUser;
     QPushButton *btnAddOrder;
+    //查询功能相关控件
+    QComboBox *cbQueryTable;       // 选择查询表
+    QComboBox *cbQueryCondition;   // 选择查询条件
+    QLineEdit *leQueryValue;       // 查询值输入
+    QPushButton *btnQuery;         // 查询按钮
+    QTableView *tvQueryResult;     // 显示查询结果
+    void handleQuery();
+    QSqlError error;
 
 };
 #endif // MAINWINDOW_H
