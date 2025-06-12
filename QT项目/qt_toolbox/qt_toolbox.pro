@@ -14,12 +14,14 @@ SOURCES += \
     dialog_config.cpp \
     main.cpp \
     mainwindow.cpp \
+    querywindow.cpp \
     worker_thread.cpp
 
 HEADERS += \
     database_helper.h \
     dialog_config.h \
     mainwindow.h \
+    querywindow.h \
     worker_thread.h
 
 FORMS += \

@@ -112,7 +112,7 @@ QSqlQuery DatabaseHelper::queryUsers(const QString &condition, const QVariant &v
     //记录当前数据库连接状态
     QSqlDatabase db = QSqlDatabase::database();
     if(!db.isOpen()){
-            m_lastError = QSqlError("数据库未打开", "请先初始化数据库连接");
+            m_lastError = QSqlError("数据库未打开", "请先初始化数据库连接",QSqlError::ConnectionError);
             return query;
         }
 
@@ -132,7 +132,7 @@ QSqlQuery DatabaseHelper::queryUsers(const QString &condition, const QVariant &v
         query.bindValue(":value", value);
         querySuccess = query.exec();
     }else{
-        m_lastError = QSqlError("无效的查询条件", "支持的查询条件：id, name, email");
+        m_lastError = QSqlError("无效的查询条件", "支持的查询条件：id, name, email",QSqlError::UnknownError);
         return query;
     }
 

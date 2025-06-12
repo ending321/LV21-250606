@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
     layout->addWidget(btnDbConfig);
+/*
     //--------------------- 查询功能控件 ---------------------
     QLabel *lblQuery = new QLabel("数据库查询:", centralWidget);
     lblQuery->setStyleSheet("font-weight:bold;");
@@ -70,6 +71,11 @@ MainWindow::MainWindow(QWidget *parent)
     tvQueryResult->setEditTriggers(QAbstractItemView::NoEditTriggers);  //NoEditTriggers 表示禁用用户编辑
     tvQueryResult->setSelectionBehavior(QAbstractItemView::SelectRows);     //设置为行选择模式，用户点击任意单元格时，整行都会被选中。
     tvQueryResult->setStyleSheet("QTableView { border: 1px solid #ccc; }");
+    tvQueryResult->setMinimumHeight(200);   //设置最小高度，确保表格可见
+
+    //创建查询容器和布局
+    QWidget *queryContainer = new QWidget(centralWidget);
+    QVBoxLayout *queryContainerLayout = new QVBoxLayout(queryContainer);
 
     //将查询控件添加到布局
     QHBoxLayout *queryHeaderLayout = new QHBoxLayout();
@@ -78,8 +84,16 @@ MainWindow::MainWindow(QWidget *parent)
     queryHeaderLayout->addWidget(cbQueryCondition);
     queryHeaderLayout->addWidget(leQueryValue);
     queryHeaderLayout->addWidget(btnQuery);
-    layout->addLayout(queryHeaderLayout);
-    layout->addWidget(tvQueryResult);
+    //layout->addLayout(queryHeaderLayout);
+    //layout->addWidget(tvQueryResult);
+
+    //使用垂直分割器或设置拉伸因子，确保表格有足够空间
+    queryContainerLayout->addLayout(queryHeaderLayout);
+    queryContainerLayout->addWidget(tvQueryResult);
+    queryContainerLayout->setContentsMargins(0, 0, 0, 0);
+    // 设置拉伸因子，让查询容器占据更多空间
+    layout->addWidget(queryContainer, 1); // 1表示拉伸因子，数值越大占据空间越多
+
     //--------------------------------------------------------
     //用户信息输入控件
     QLabel *lbUserName = new QLabel("用户名:", centralWidget);
@@ -188,7 +202,7 @@ MainWindow::MainWindow(QWidget *parent)
     formLayout->addRow(btnAddOrder);
 
     layout->addLayout(formLayout);
-
+*/
     //-------------------------------------------------------
     // 功能按钮 - 多线程测试（模拟耗时操作）
     QPushButton *btnThreadTest = new QPushButton("多线程测试", this);
@@ -267,15 +281,16 @@ void MainWindow::handleQuery()
         }
     }
 
-    // 执行查询
-    if (query.exec()) {
-        // 显示查询结果
-        QSqlQueryModel *model = new QSqlQueryModel(this);
-        model->setQuery(query);
-        tvQueryResult->setModel(model);
-        tvQueryResult->resizeColumnsToContents();
-    } else {
-        error = query.lastError();
-        QMessageBox::critical(this, "查询失败", "查询执行失败: " + error.text());
+    // 显示查询结果
+    QSqlQueryModel *model = new QSqlQueryModel(this);
+    model->setQuery(std::move(query));
+    tvQueryResult->setModel(model);     //将模型关联到表格视图控件（QTableView）
+    tvQueryResult->resizeColumnsToContents();   //自适应列宽
+
+    //检查查询是否有错误（从 DatabaseHelper 的 lastError 判断，更准确）
+    QSqlError error = dbHelper.lastError();
+    if(error.isValid())    //用于判断是否存在有效的错误信息,用来检测 “有没有实际的数据库错误发生”。
+    {
+        QMessageBox::critical(this,"查询失败","查询执行失败:"+error.text());
     }
 }

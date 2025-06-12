@@ -1,0 +1,51 @@
+#include "server.c"
+
+int main(int argc, char *argv[]){
+
+	//准备套接字
+	int fd = socket(AF_INET, SOCK_DGRAM, 0);
+	if(fd < 0){
+	    perror("socket creation failed");
+	    exit(EXIT_FAILURE);
+	}
+	//设置服务器地址
+	struct sockaddr_in addr = {
+	    .sin_family = AF_INET,
+	    .sin_port = 8888,
+	    .sin_addr = {},
+	}
+	//绑定
+	if(bind(fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in))){
+	    perror("bind");
+	    exit(EXIT_FAILURE);
+	}
+	//准备sqlite3数据库
+	//接收数据
+	char buf[BUFSIZE] = {};
+	struct sockaddr_in client_addr;
+	socklen_t addrlen = sizeof(client_addr);
+	while(1){
+	    recvfrom(fd, buf, BUFSIZ, 0, (struct sockaddr *)&client_addr, &addrlen);
+	    //识别消息类型，处理消息
+	    switch(buf[0]) {
+	        case PROTOCOL_TYPE_REGISTER:  //注册消息
+		    do_register(buf, client_addr);
+		    break;
+		case PROTOCOL_TYPE_LOGIN:     //登陆消息
+		    do_login(buf, client_addr);
+		    break;
+		case PROTOCOL_TYPE_PICKUP:    //取件消息
+		    do_pickup(buf, client_addr);
+		    break;
+		case PROTOCOL_TYPE_DELIVERY:   //投递
+		    do_delivery(buf, client_addr);
+		    break;
+		default:
+		    fprintf(stderr, "不存在消息类型编号：%d\n", buf[0]);
+	    }
+	}
+	//关闭数据库连接
+	//关闭套接字
+	close(fd);
+	return 0;
+}
