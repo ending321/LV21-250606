@@ -1,0 +1,10 @@
+debug/database_helper.o
+debug/dialog_config.o
+debug/main.o
+debug/mainwindow.o
+debug/querywindow.o
+debug/worker_thread.o
+debug/moc_dialog_config.o
+debug/moc_mainwindow.o
+debug/moc_querywindow.o
+debug/moc_worker_thread.o

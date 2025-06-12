@@ -5,6 +5,7 @@
 #include"dialog_config.h"
 #include"worker_thread.h"
 #include"database_helper.h"
+#include"querywindow.h"
 #include<QVBoxLayout>
 #include<QPushButton>
 #include<QMessageBox>
@@ -44,13 +45,7 @@ private:
     QLineEdit *leUserId;
     QPushButton *btnAddUser;
     QPushButton *btnAddOrder;
-    //查询功能相关控件
-    QComboBox *cbQueryTable;       // 选择查询表
-    QComboBox *cbQueryCondition;   // 选择查询条件
-    QLineEdit *leQueryValue;       // 查询值输入
-    QPushButton *btnQuery;         // 查询按钮
-    QTableView *tvQueryResult;     // 显示查询结果
-    void handleQuery();
+    //void handleQuery();
     QSqlError error;
 
 };

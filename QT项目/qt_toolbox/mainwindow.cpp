@@ -45,6 +45,14 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
     layout->addWidget(btnDbConfig);
+
+    //添加打开查询窗口的按钮
+    QPushButton *btnOpenQueryWindow = new QPushButton("打开数据库查询", this);
+    connect(btnOpenQueryWindow, &QPushButton::clicked, this, [=](){
+        QueryWindow queryWindow(this);
+        queryWindow.exec();
+    });
+    layout->addWidget(btnOpenQueryWindow);
 /*
     //--------------------- 查询功能控件 ---------------------
     QLabel *lblQuery = new QLabel("数据库查询:", centralWidget);
@@ -93,7 +101,7 @@ MainWindow::MainWindow(QWidget *parent)
     queryContainerLayout->setContentsMargins(0, 0, 0, 0);
     // 设置拉伸因子，让查询容器占据更多空间
     layout->addWidget(queryContainer, 1); // 1表示拉伸因子，数值越大占据空间越多
-
+*/
     //--------------------------------------------------------
     //用户信息输入控件
     QLabel *lbUserName = new QLabel("用户名:", centralWidget);
@@ -202,7 +210,7 @@ MainWindow::MainWindow(QWidget *parent)
     formLayout->addRow(btnAddOrder);
 
     layout->addLayout(formLayout);
-*/
+
     //-------------------------------------------------------
     // 功能按钮 - 多线程测试（模拟耗时操作）
     QPushButton *btnThreadTest = new QPushButton("多线程测试", this);
@@ -247,6 +255,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/*
 void MainWindow::handleQuery()
 {
     //获取查询参数
@@ -294,3 +303,4 @@ void MainWindow::handleQuery()
         QMessageBox::critical(this,"查询失败","查询执行失败:"+error.text());
     }
 }
+*/

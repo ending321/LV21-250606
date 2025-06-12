@@ -1,0 +1,10 @@
+release/database_helper.o
+release/dialog_config.o
+release/main.o
+release/mainwindow.o
+release/querywindow.o
+release/worker_thread.o
+release/moc_dialog_config.o
+release/moc_mainwindow.o
+release/moc_querywindow.o
+release/moc_worker_thread.o
