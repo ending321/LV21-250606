@@ -13,50 +13,50 @@ Window {
     property int port:8888
 
     StackView {
-            id: stack
-            initialItem: mainView
-            anchors.fill: parent
-        }
+        id: stack
+        initialItem: mainView
+        anchors.fill: parent
+    }
 
-        Component {
-            id: mainView
+    Component {
+        id: mainView
 
-            Column {
-                spacing: spacing_size
+        Column {
+            spacing: spacing_size
 
-                Image{
-                    id:delivery_image
-                    width:parent.width
-                    fillMode:Image.PreserveAspectFit
-                    Component.onCompleted: {
-                        delivery_image.source="qrc:/new/prefix1/delivery.png"
-                    }
-                }
-
-                Button {
-                    anchors.horizontalCenter:parent.horizontalCenter
-                    width: parent.width*0.5
-                    contentItem: Text {
-                        id: button_delivery
-                        text: qsTr("投 递")
-                        font.pixelSize: text_size
-                        horizontalAlignment: Text.AlignHCenter
-                    }
-                    onClicked: stack.push("qrc:/login.qml")
-                }
-                Button {
-                    anchors.horizontalCenter:parent.horizontalCenter
-                    width: parent.width*0.5
-                    contentItem: Text {
-                        id: button_pickup
-                        text: qsTr("取 件")
-                        font.pixelSize: text_size
-                        horizontalAlignment: Text.AlignHCenter
-                    }
-                    onClicked: stack.push("qrc:/pickup.qml")
+            Image{
+                id:delivery_image
+                width:parent.width
+                fillMode:Image.PreserveAspectFit
+                Component.onCompleted: {
+                    delivery_image.source="qrc:/new/prefix1/delivery.png"
                 }
             }
+
+            Button {
+                anchors.horizontalCenter:parent.horizontalCenter
+                width: parent.width*0.5
+                contentItem: Text {
+                    id: button_delivery
+                    text: qsTr("投 递")
+                    font.pixelSize: text_size
+                    horizontalAlignment: Text.AlignHCenter
+                }
+                onClicked: stack.push("qrc:/login.qml")
+            }
+            Button {
+                anchors.horizontalCenter:parent.horizontalCenter
+                width: parent.width*0.5
+                contentItem: Text {
+                    id: button_pickup
+                    text: qsTr("取 件")
+                    font.pixelSize: text_size
+                    horizontalAlignment: Text.AlignHCenter
+                }
+                onClicked: stack.push("qrc:/pickup.qml")
+            }
         }
+    }
 
     InputPanel {
         id: inputPanel

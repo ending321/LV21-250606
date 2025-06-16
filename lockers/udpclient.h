@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QUdpSocket>
+#include <unistd.h>
 
 class UdpClient : public QObject
 {
